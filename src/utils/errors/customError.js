@@ -1,8 +1,11 @@
-export default class CustomError {
-    static createError({name="Error", cause, message, code=1}){
-        const error = new Error(message, {cause});
-        error.name = name;
-        error.code = code;
-        throw error;
+import errorDictionary from './errorDictionary.js';
+
+class CustomError extends Error {
+    constructor(errorType, details = {}) {
+        super(errorDictionary[errorType].message);
+        this.code = errorDictionary[errorType].code;
+        this.details = details;
     }
 }
+
+export default CustomError;

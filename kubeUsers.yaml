@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubedeployment
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+      - name: userscontainer
+        image: maxirosanda/recursos-backend3:1.0.0
+        ports:
+        - containerPort: 8000
+        env:
+        - name: MONGO_URL
+          value: "mongodb+srv://gaboarmella:171218@cluster1.7dua5.mongodb.net/Backend-III"
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-service
+spec:
+  selector:
+    app: users
+  ports:
+    - port: 80
+      targetPort: 8000
+      nodePort: 30008 # Puedes cambiarlo por otro número en el rango 30000-32767
+  type: NodePort
