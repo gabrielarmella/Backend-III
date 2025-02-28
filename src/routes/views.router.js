@@ -1,5 +1,5 @@
 import { Router } from "express";
-import usersModel from "../models/User.js";
+import User from "../dao/models/User.js";
 import { faker } from "@faker-js/faker";
 
 const router = Router();
@@ -22,8 +22,8 @@ router.post('/',async(req,res)=>{
 })
 
 router.get('/test',(req,res)=>{
-    let first_name = faker.name.firstName();
-    let last_name = faker.name.lastName();
+    let first_name = faker.person.firstName();
+    let last_name = faker.person.lastName();
     let email = faker.internet.email();
     let password =  faker.internet.password();
     res.send({first_name,last_name,email,password})

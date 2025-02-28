@@ -15,6 +15,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors'
 import config from './config/config.js';
+import router from './routes/users.router.js';
 
 
 dotenv.config();
@@ -61,14 +62,6 @@ app.get('/operacioncompleja', (req, res) => {
     res.send({ sum });
 });
 
-app.get('/api/test/user', (req, res) => {
-    let first_name = faker.person.firstName();
-    let last_name = faker.person.lastName();
-    let email = faker.internet.email();
-    let password = faker.internet.password();
-    res.send({ first_name, last_name, email, password });
-});
-
 app.get("/loggertest",(req,res)=>{
     req.logger.debug("Debug message");
     req.logger.http("HTTP message");
@@ -78,6 +71,7 @@ app.get("/loggertest",(req,res)=>{
     req.logger.fatal("Fatal message");
     res.send("Logger test");
 })
+
 
 app.use(errorHandler)
 app.listen(PORT,()=>logger.info(`Listening on ${PORT}`))

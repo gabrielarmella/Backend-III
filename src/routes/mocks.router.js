@@ -1,48 +1,54 @@
 import {Router} from 'express';
-import bcrypt from 'bcrypt';
-import { faker } from '@faker-js/faker'; 
+import {generateMockPets, generateMockUsers, createMany} from '../mocks/mockings.js';
 
 const router = Router();
 
-router.get("/mockingpets",(req,res)=> {
-    const pets = []
-    const speciesList = ["dog","cat","fish"]
-
-    for(let i=0;i<100;i++){
-        pets.push({
-            name:faker.person.firstName(),
-            specie:faker.helpers.arrayElement(speciesList),
-            birthDate:faker.date.birthdate({min:1,max:15,mode:"age"}).toISOString().split("T")[0]
-        })
+router.get("/mockingpets", async (req, res) => {
+    try {
+        const pets = await generateMockPets(100);
+        res.send({ status: "success", payload: pets });
+    } catch (error) {
+        req.logger?.error('Error generating mock pets:', error);
+        res.status(500).send({ status: "error", error: "Error generating mock data" });
     }
-    res.send({status:"success",payload:pets})
-})
-router.get('/mockingusers', async (req, res) => {
-    const users = [];
-    const roles = ['user', 'admin'];
-    for (let i = 0; i < 50; i++) {
-        const password = await bcrypt.hash('coder123', 10);
-        users.push({
-            first_name: faker.person.firstName(),
-            last_name: faker.person.lastName(),
-            email: faker.internet.email(),
-            password: password,
-            role: faker.helpers.arrayElement(roles),
-            pets: []
-        });
-    }
-    res.send({ status: 'success', payload: users });
 });
 
-/* router.post('/generateData', async (req, res) => {
+router.get('/mockingusers', async (req, res) => {
     try {
-        const { users, pets } = req.body;
-        const result = await createMany(users, pets);
-        res.json(result);
+        const users = await generateMockUsers(50);
+        res.send({ status: 'success', payload: users });
     } catch (error) {
-        req.logger.error('Error generating data:', error);
-        res.status(500).json({ status: 'error', error: 'Unhandled error' });
+        req.logger?.error('Error generating mock users:', error);
+        res.status(500).send({ status: "error", error: "Error generating mock data" });
     }
-}); */
+});
+router.post('/generateData', async (req, res) => {
+    try {
+        const { users = [], pets = [] } = req.body;
+        
+            // Validar que se recibieron números
+        if (typeof users !== 'number' || typeof pets !== 'number' || users < 0 || pets < 0) {
+            return res.status(400).json({ 
+                status: 'error', 
+                error: 'Los parámetros "users" y "pets" deben ser números positivos' 
+            });
+        }
+        // Generar los datos mock
+        const mockUsers = users > 0 ? await generateMockUsers(users) : [];
+        const mockPets = pets > 0 ? await generateMockPets(pets) : [];
+        
+        // Guardar los datos en la base de datos
+        const result = await createMany(mockUsers, mockPets);
+        
+        res.json({ 
+            status: 'success', 
+            result,
+            message: `Se generaron ${result.users.created} usuarios y ${result.pets.created} mascotas correctamente`
+        });
+    } catch (error) {
+        req.logger?.error('Error generating data:', error);
+        res.status(500).json({ status: 'error', error: 'Error al generar datos: ' + error.message });
+    }
+});
 
 export default router;
