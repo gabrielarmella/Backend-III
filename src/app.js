@@ -16,7 +16,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT||8081;
-const connection = mongoose.connect(process.env.MONGODB_URL)
+const connection = mongoose.connect(process.env.MONGO_URL);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -27,4 +27,5 @@ app.use('/api/users',usersRouter);
 app.use('/api/pets',petsRouter);
 app.use('/api/adoptions',adoptionsRouter);
 app.use('/api/sessions',sessionsRouter);
-app.listen(PORT,()=>logger.info(`Listening on ${PORT}`))
+
+app.listen(PORT,()=>logger.info(`Listening on ${PORT}`));
