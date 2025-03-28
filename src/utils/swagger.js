@@ -1,4 +1,7 @@
-import {basename} from "./index.js";
+import __dirname from "./index.js";
+import {resolve} from "path";
+
+const basename = resolve(__dirname, "../docs/**/*.yaml"); 
 
 export const  swaggerOptions = {
     definition: {
@@ -9,5 +12,5 @@ export const  swaggerOptions = {
             description: 'API description'
         }
     },
-    apis: [`${basename}/docs/**/*.yaml`]
+    apis: [basename]
 }

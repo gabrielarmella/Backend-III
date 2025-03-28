@@ -1,11 +1,7 @@
-import { Command } from 'commander';
+import {program} from 'commander';
 
-const program = new Command();
+program.option('--logger <logger>', '', "", "DEVELOPMENT");
 
-program
-  .option('-l, --logger <type>', 'specify logger type', 'DEVELOPMENT');
-
-program.parse(process.argv);
+program.parse();
 
 export const option = program.opts();
-

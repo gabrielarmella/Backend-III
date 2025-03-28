@@ -15,6 +15,10 @@ export default class Users {
         return userModel.create(doc);
     }
 
+    addDocuments = (id,doc) =>{
+        return userModel.findByIdAndUpdate(id,{$push:{documents:doc}})
+    }
+    
     update = (id,doc) =>{
         return userModel.findByIdAndUpdate(id,{$set:doc})
     }

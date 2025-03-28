@@ -23,14 +23,7 @@ const customLevelsOptions = {
 const loggerProduction = winston.createLogger({
     levels: customLevelsOptions.levels,
     transports: [
-        new winston.transports.File({ filename: "errors.log", level: "error" }),
-        new winston.transports.Console({
-            level: "info",
-            format: winston.format.combine(
-                winston.format.colorize({ colors: customLevelsOptions.colors }),
-                winston.format.simple()
-            )
-        })
+        new winston.transports.File({filename: "combined.log", level: "warn"})
     ]
 });
 
@@ -49,8 +42,3 @@ const loggerDevelopment = winston.createLogger({
 
 export const logger = option.logger === "PRODUCTION" ? loggerProduction : loggerDevelopment;
 
-export const addLogger = (req, res, next) => {
-    req.logger = option.logger === "PRODUCTION" ? loggerProduction : loggerDevelopment;
-    req.logger.http(`${req.method} -  ${req.url} - ${new Date().toLocaleTimeString()}`);
-    next();
-};
