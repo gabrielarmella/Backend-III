@@ -6,8 +6,8 @@
     "type": "module",
     "scripts": {
         "test": "mocha test/supertest.test.js",
-        "dev": "nodemon /src/app.js --logger DEVELOPMENT",
-        "start": "node /src/app.js --logger PRODUCTION"
+        "dev": "nodemon src/app.js --logger DEVELOPMENT",
+        "start": "node src/app.js --logger PRODUCTION"
     },
     "dependencies": {
         "bcrypt": "^5.1.0",
